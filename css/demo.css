@@ -20,12 +20,12 @@
   display: flex;
   margin-bottom: 10px;
   flex-direction: column;
-  background-color: #eee;
+  background-color: #f8f8f8;
 }
   .demo-row-title{
     line-height: 1;
     font-size: 18px;
-    background-color: #ccc;
+    background-color: #dedede;
     padding: 0.5em 1em 0.3em;
     text-transform: uppercase;
   }
