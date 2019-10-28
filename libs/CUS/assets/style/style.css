@@ -1,0 +1,73 @@
+.CUS-input-wrapper{
+  z-index: 3;
+}
+.CUS-input-wrapper:not(.CUS-input-wrapper_search):after{
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  content: '';
+  cursor: pointer;
+  display: 'block';
+  position: absolute;
+}
+  .CUS-input{
+    width: 100%;
+    height: 30px;
+    border: none;
+    padding: 0 10px;
+    line-height: 30px;
+    border-radius: 4px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    box-shadow: 0px 1px 3px 1px rgba(100,100,100,0.2)
+  }
+    .CUS-input::placeholder{
+      color: #aaa;
+    }
+    .CUS-input:not(.CUS-input_search){
+      cursor: pointer;
+      background-size: 8px 8px;
+      background-repeat: no-repeat;
+      background-position: center right 12px;
+      background-image: url('../icons/next.svg')
+    }
+
+.CUS-list{
+  left: 0;
+  top: 0px;
+  z-index: 2;
+  width: 100%;
+  display: none;
+  list-style: none;
+  position: absolute;
+  border-radius: 4px;
+  padding: 37px 0 7px;
+  background-color: #fff;
+  border-top: 1px solid #aaa;
+  box-shadow: 0px 1px 3px 1px rgba(100,100,100,0.2);
+}
+  .CUS-list-position{
+    width: 100%;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 6px 10px 3px;
+    display: inline-block;
+    transition: all .2s ease;
+  }
+  .CUS-list-position:hover{
+    background-color: #eee;
+  }
+
+.CUS-wrapper.CUS-wrapper_opened{
+  z-index: 5;
+}
+.CUS-wrapper.CUS-wrapper_opened .CUS-input{
+  box-shadow: none;
+  border-radius: 4px 4px 0 0;
+  border-bottom: 1px solid #eee;
+}
+.CUS-wrapper.CUS-wrapper_opened .CUS-list{
+  display: block;
+}

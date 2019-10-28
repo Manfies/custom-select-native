@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/demo.css" type="text/css" media="screen" charset="utf-8">
 
     <!-- Custom user select stylesheet -->
-    <link rel="stylesheet" href="css/demo.css" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="libs/CUS/assets/style/style.css" type="text/css" media="screen" charset="utf-8">
 
   </head>
   <body>
@@ -19,10 +19,10 @@
     
       <!-- First demo -->
       <div class="demo-row">
-        <h2 class="demo-row-title">Demo #1 of default CUS:</h2>
+        <h2 class="demo-row-title">Demo #1: Default<a href="#" class="demo-test-button" onclick="testSelectValue('demo1')">T</a></h2>
         <div class="demo-row-content">
           <p class="demo-row-description"></p>
-          <select class="CUS other-user-class" placeholder="test">
+          <select name="demo1" class="CUS other-user-class" placeholder="test">
             <option value="1">Select option 1</option>
             <option value="2">Select option 2</option>
             <option value="3">Select option 3</option>
@@ -36,10 +36,10 @@
 
       <!-- Second demo -->
       <div class="demo-row">
-        <h2 class="demo-row-title">Demo #2 of default CUS:</h2>
+        <h2 class="demo-row-title">Demo #2: Searchable select<a href="#" class="demo-test-button" onclick="testSelectValue('demo2')">T</a></h2>
         <div class="demo-row-content">
           <p class="demo-row-description"></p>
-          <select class="CUS other-user-class">
+          <select name="demo2" class="CUS other-user-class" searchable>
             <option value="1">Select demo option 1</option>
             <option value="2">Select demo option 1</option>
             <option value="3">Select demo option 3</option>
@@ -52,6 +52,7 @@
 
     <!-- CUS Script -->
     <script type="text/javascript" src="libs/CUS/index.js"></script>
+    <script type="text/javascript" src="js/index.js"></script>
     
   </body>
 </html>

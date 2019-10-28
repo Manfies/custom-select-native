@@ -22,6 +22,7 @@
   flex-direction: column;
   background-color: #f8f8f8;
 }
+
   .demo-row-title{
     line-height: 1;
     font-size: 18px;
@@ -29,6 +30,10 @@
     padding: 0.5em 1em 0.3em;
     text-transform: uppercase;
   }
+    .demo-test-button{
+      float: right;
+    }
+
   .demo-row-content{
     display: flex;
     flex-direction: column;
