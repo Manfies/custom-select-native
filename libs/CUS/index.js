@@ -37,10 +37,9 @@
         const selectElements = document.querySelectorAll(`select.${CSS_BASE_CLASS}`);
         selectElements.forEach((selectEl, index) => {
 
-          selectEl.value = ""
-
+          let selectText
           const selectValue = selectEl.value;
-          const selectWidth = selectEl.getAttribute('width')
+          const selectWidth = selectEl.getAttribute('width');
           const selectName = selectEl.getAttribute('name') || `CUS-${index}`;
           const selectPlaceholder = selectEl.getAttribute('placeholder');
           const selectIsSearchable = Boolean(selectEl.getAttribute('searchable') !== null);
@@ -58,12 +57,16 @@
                 value: optionValue,
                 selected: optionSelected
               }
+              if(optionSelected){
+                selectText = optionName
+              }
               selectOptions.push(option)
             }
           })
 
           const select = {
             name: selectName,
+            text: selectText,
             value: selectValue,
             width: selectWidth,
             nativeSelect: selectEl,
@@ -114,6 +117,7 @@
           // Hide opened lists
           this.selects.forEach((select) => {
             const valueOfSelect = select.nativeSelect.value
+            const nameOfSelectedOption = select.customSelect.input.querySelector('input').value
             if(!valueOfSelect){
               select.customSelect.input.querySelector('input').value = ""
             }
@@ -126,6 +130,10 @@
           if(isOpenSelectEvent){
             const selectName = event.target.getAttribute('data-select-name')
             const select = this.getSelectByName(selectName)
+            const selectValue = select.nativeSelect.value
+            if(!selectValue){
+              select.list.search("")
+            }
             select.customSelect.el.classList.add(CSS_CLASS_WRAPPER + CSS_MOD_OPENED)
           }
 
@@ -142,8 +150,8 @@
             listPositions.forEach((listPosition) => {
               listPosition.classList.remove(CSS_CLASS_LIST_POS + CSS_MOD_SELECTED)
             })
+            console.log(event.target)
             event.target.classList.add(CSS_CLASS_LIST_POS + CSS_MOD_SELECTED)
-
           }
 
         })
@@ -170,7 +178,7 @@
       search(searchStr){
         this.el.innerHTML = ""
         const result = this.options.filter((option) => {
-          return option.name.indexOf(searchStr) !== -1
+          return option.name.toLowerCase().indexOf(searchStr.toLowerCase()) !== -1
         })
         this.updateList(result)
       };
@@ -182,6 +190,9 @@
           optionEl.classList.add(CSS_CLASS_LIST_POS)
           optionEl.classList.add(CSS_CLASS_LIST_POS + CSS_MOD_JS)
           optionEl.setAttribute('data-value', option.value)
+          if(option.selected){
+            optionEl.classList.add(CSS_CLASS_LIST_POS + CSS_MOD_SELECTED)
+          }
           this.el.appendChild(optionEl)
         })
       
@@ -195,12 +206,16 @@
         this.el.classList.add(CSS_CLASS_WRAPPER);
         this.el.style.width = selectData.width
 
-        const input = this.createInput(selectData.searchable, selectData.placeholder, selectData.name)
+        const input = this.createInput(selectData)
         this.input = input
         this.el.appendChild(input)
       };
 
-      createInput(searchIsEnable, placeholder, selectName){
+      createInput(selectData){
+
+        const selectName = selectData.name
+        const placeholder = selectData.placeholder
+        const searchIsEnable = selectData.searchable
 
         const inputWrapperEl = document.createElement('div');
         const inputEl = document.createElement('input');
@@ -222,6 +237,11 @@
           inputWrapperEl.classList.add(CSS_CLASS_INPUT + CSS_MOD_JS)
           inputWrapperEl.setAttribute('data-select-name', selectName)
           inputEl.placeholder = placeholder || TEXT_DEFAULT_PLACEHOLDER;
+        }
+
+        // Set selected value
+        if(selectData.value){
+          inputEl.value = selectData.text
         }
 
         inputWrapperEl.appendChild(inputEl)

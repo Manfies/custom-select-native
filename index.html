@@ -17,45 +17,62 @@
     <div class="demo-wrapper">
       <h1 class="demo-h1">Demo of custom user select - Vanilla JS</h1>
     
-      <!-- First demo -->
-      <div class="demo-row">
-        <h2 class="demo-row-title">Demo #1: Default<a href="#" class="demo-test-button" onclick="testSelectValue('demo1')">T</a></h2>
-        <div class="demo-row-content">
-          <p class="demo-row-description"></p>
-          <select name="demo1" class="CUS other-user-class">
-            <option value="1">Select option 1</option>
-            <option value="2">Select option 2</option>
-            <option value="3">Select option 3</option>
-            <option value="4">Select option 4</option>
-          </select>
-        </div>
-      </div>
+      <div class="demo-content">
+        <div class="demo-content__result">
 
-      <!-- Second demo -->
-      <div class="demo-row">
-        <h2 class="demo-row-title">Demo #2: Searchable select<a href="#" class="demo-test-button" onclick="testSelectValue('demo2')">T</a></h2>
-        <div class="demo-row-content">
-          <p class="demo-row-description"></p>
-          <select name="demo2" class="CUS other-user-class" searchable>
-            <option value="anteater">Anteater</option>
-            <option value="antelope">Antelope</option>
-            <option value="armadillo">Armadillo</option>
-            <option value="badger">Badger</option>
-            <option value="bat">Bat</option>
-            <option value="bear">Bear</option>
-            <option value="beaver">Beaver</option>
-            <option value="bullock">Bullock</option>
-            <option value="camel">Camel</option>
-            <option value="chimpanzee">Chimpanzee</option>
-            <option value="dolphin">Dolphin</option>
-            <option value="elephant">Elephant</option>
-            <option value="fox">Fox</option>
-            <option value="gazelle">Gazelle</option>
-            <option value="gerbil">Gerbil</option>
-            <option value="giraffe">Giraffe</option>
-            <option value="goat">Goat</option>
-            <option value="grizzly-bear">Grizzly bear</option>
-          </select>
+          <!-- First demo -->
+          <div class="demo-row">
+            <h2 class="demo-row-title">Demo #1: Default<a href="#" class="demo-test-button" onclick="testSelectValue('demo1')">T</a></h2>
+            <div class="demo-row-content">
+              <p class="demo-row-description"></p>
+              <select
+                name="demo1"
+                class="CUS other-user-class"
+              >
+                <option></option>
+                <option value="1">Select option 1</option>
+                <option value="2">Select option 2</option>
+                <option value="3">Select option 3</option>
+                <option value="4">Select option 4</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Second demo -->
+          <div class="demo-row">
+            <h2 class="demo-row-title">Demo #2: Searchable select<a href="#" class="demo-test-button" onclick="testSelectValue('demo2')">T</a></h2>
+            <div class="demo-row-content">
+              <p class="demo-row-description"></p>
+              <select
+                name="demo2"
+                class="CUS other-user-class"
+                searchable
+              >
+                <option value="anteater">Anteater</option>
+                <option value="antelope">Antelope</option>
+                <option selected value="armadillo">Armadillo</option>
+                <option value="badger">Badger</option>
+                <option value="bat">Bat</option>
+                <option value="bear">Bear</option>
+                <option value="beaver">Beaver</option>
+                <option value="bullock">Bullock</option>
+                <option value="camel">Camel</option>
+                <option value="chimpanzee">Chimpanzee</option>
+                <option value="dolphin">Dolphin</option>
+                <option value="elephant">Elephant</option>
+                <option value="fox">Fox</option>
+                <option value="gazelle">Gazelle</option>
+                <option value="gerbil">Gerbil</option>
+                <option value="giraffe">Giraffe</option>
+                <option value="goat">Goat</option>
+                <option value="grizzly-bear">Grizzly bear</option>
+              </select>
+            </div>
+          </div>
+
+        </div>
+        <div class="demo-content__code">
+          <img src="images/usage.png">
         </div>
       </div>
 
