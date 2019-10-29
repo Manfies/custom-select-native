@@ -3,20 +3,29 @@
   
   const ModuleCUS = (function(){
 
-    const WIDGET_DEFAULT_PREFIX = 'CUS'
+    const CSS_BASE_CLASS = 'CUS';
+
+    const CSS_CLASS_WRAPPER = CSS_BASE_CLASS + '-wrapper';
+    const CSS_CLASS_INPUT_WRAPPER = CSS_BASE_CLASS + '-input-wrapper';
+    const CSS_CLASS_INPUT = CSS_BASE_CLASS + '-input';
+    const CSS_CLASS_LIST = CSS_BASE_CLASS + '-list';
+    const CSS_CLASS_LIST_POS = CSS_BASE_CLASS + '-list-position';
+
+    const CSS_MOD_JS = '_JS';
+    const CSS_MOD_OPENED = '_opened';
+    const CSS_MOD_SELECTED = '_selected';
+    const CSS_MOD_SEARCHABLE = '_searchable';
+
+    const TEXT_DEFAULT_PLACEHOLDER = 'Select...'
+    const TEXT_DEFAULT_PLACEHOLDER_SEARCH = 'Search:'
 
     class Widget {
-
       selects = [];
 
       constructor(){
         this.init()
       };
-
-      static generateDefaultClassForElement(className){
-        return `${WIDGET_DEFAULT_PREFIX}-${className}`
-      };
-
+      
       init(){
         this.collectDataOfSelects()
         this.createElements()
@@ -25,30 +34,24 @@
       };
 
       collectDataOfSelects(){
-        const selectsElements = document.querySelectorAll(`select.${WIDGET_DEFAULT_PREFIX}`);
-        selectsElements.forEach((selectEl, index) => {
-        
-          let selectPlaceholder
-          const selectValue = selectEl.value;
-          const selectName = selectEl.getAttribute('name') || `CUS-${index}`;
-          const selectUsersPlaceholder = selectEl.getAttribute('placeholder');
-          const selectIsSearchable = Boolean(selectEl.getAttribute('searchable') !== null);
+        const selectElements = document.querySelectorAll(`select.${CSS_BASE_CLASS}`);
+        selectElements.forEach((selectEl, index) => {
 
-          if(selectIsSearchable){
-            selectUsersPlaceholder ? selectPlaceholder = selectUsersPlaceholder : selectPlaceholder = 'Search:'
-          }else{
-            selectUsersPlaceholder ? selectPlaceholder = selectUsersPlaceholder : selectPlaceholder = 'Select...'
-          }
+          selectEl.value = ""
+
+          const selectValue = selectEl.value;
+          const selectWidth = selectEl.getAttribute('width')
+          const selectName = selectEl.getAttribute('name') || `CUS-${index}`;
+          const selectPlaceholder = selectEl.getAttribute('placeholder');
+          const selectIsSearchable = Boolean(selectEl.getAttribute('searchable') !== null);
 
           const selectOptions = [];
           const selectOptionsElements = selectEl.childNodes;
 
           selectOptionsElements.forEach((optionEl) => {
-
             const optionName = optionEl.text;
             const optionValue = optionEl.value;
             const optionSelected = optionEl.selected;
-
             if(optionName && optionValue && typeof optionSelected === 'boolean'){
               const option = {
                 name: optionName,
@@ -60,115 +63,165 @@
           })
 
           const select = {
-            el: selectEl,
             name: selectName,
             value: selectValue,
+            width: selectWidth,
+            nativeSelect: selectEl,
             options: selectOptions,
             searchable: selectIsSearchable,
             placeholder: selectPlaceholder,
           }
 
           this.selects.push(select)
-
         })
       };
 
       createElements(){
         this.selects.forEach((select) => {
           const selectInstance = new Select(select)
-          const list = new List(select.options) 
+          const list = new List(select.options, select.name) 
 
+          select.list = list
+          select.listEl = list.el
           selectInstance.el.appendChild(list.el)
-          select.customSelect = selectInstance.el
+          select.customSelect = selectInstance
         })
       };
 
       renderSelects(){
         this.selects.forEach((select) => {
-          select.el.style.display = 'none'
-          const referenceNode = select.el.parentNode
-          referenceNode.insertBefore(select.customSelect, select.el)
+          select.nativeSelect.style.display = 'none'
+          const referenceNode = select.nativeSelect.parentNode
+          referenceNode.insertBefore(select.customSelect.el, select.nativeSelect)
         })
       };
 
       addEventListeners(){
-        const selectOpenedClassName = 'CUS-wrapper_opened'
-        const jsSelectInputClassName = 'CUS-input-JS'
-        const selectInputWrapperClassName = 'CUS-input-wrapper'
-        document.addEventListener('click', (event) => {
 
-          this.selects.forEach((select) => {
-            select.customSelect.classList.remove(selectOpenedClassName)
-          })
-
-          const isOpenSelect = event.target.classList.contains(jsSelectInputClassName)
-          const isInputWrapper = event.target.classList.contains(selectInputWrapperClassName)
-          if(isOpenSelect){
-            let list
-            if(isInputWrapper){
-              list = event.target.parentNode.classList.add(selectOpenedClassName)
-            }else{
-              list = event.target.parentNode.parentNode.classList.add(selectOpenedClassName)
-            }
+        this.selects.forEach((select) => {
+          const isSearchableSelect = select.customSelect.input.classList.contains(CSS_CLASS_INPUT_WRAPPER + CSS_MOD_SEARCHABLE)
+          if(isSearchableSelect){
+            select.customSelect.input.querySelector('input').addEventListener('input', (event) => {
+              select.nativeSelect.value = ""
+              const searchString = event.target.value
+              select.list.search(searchString)
+            })
           }
         })
-      }
+        
+        document.addEventListener('click', (event) => {
+          
+          // Hide opened lists
+          this.selects.forEach((select) => {
+            const valueOfSelect = select.nativeSelect.value
+            if(!valueOfSelect){
+              select.customSelect.input.querySelector('input').value = ""
+            }
+            select.customSelect.el.classList.remove(CSS_CLASS_WRAPPER + CSS_MOD_OPENED)
+          })
+
+          const isOpenSelectEvent = event.target.classList.contains(CSS_CLASS_INPUT + CSS_MOD_JS)
+          const isChangeSelectValueEvent = event.target.classList.contains(CSS_CLASS_LIST_POS + CSS_MOD_JS)
+
+          if(isOpenSelectEvent){
+            const selectName = event.target.getAttribute('data-select-name')
+            const select = this.getSelectByName(selectName)
+            select.customSelect.el.classList.add(CSS_CLASS_WRAPPER + CSS_MOD_OPENED)
+          }
+
+          if(isChangeSelectValueEvent){
+            const text = event.target.innerHTML
+            const value = event.target.getAttribute('data-value')
+            const selectName = event.target.getAttribute('data-select-name')
+            const select = this.getSelectByName(selectName)
+            select.customSelect.input.querySelector('input').value = text;
+            select.nativeSelect.value = value;
+
+            // Set clear selected element and set new
+            const listPositions = select.listEl.childNodes
+            listPositions.forEach((listPosition) => {
+              listPosition.classList.remove(CSS_CLASS_LIST_POS + CSS_MOD_SELECTED)
+            })
+            event.target.classList.add(CSS_CLASS_LIST_POS + CSS_MOD_SELECTED)
+
+          }
+
+        })
+      };
+
+      getSelectByName(name){
+        const select = this.selects.find((select) => {
+          return select.name === name
+        })
+        return select || null
+      };
 
     }
 
     class List {
-      listClassName = 'list'
-      listJsClassName = 'list-JS'
-      listPositionClassName = 'list-position'
-      constructor(options){
+      constructor(options, selectName){
+        this.options = options
+        this.selectName = selectName
         this.el = document.createElement('ul')
-        this.el.classList.add(Widget.generateDefaultClassForElement(this.listClassName))
-        this.el.classList.add(Widget.generateDefaultClassForElement(this.listJsClassName))
+        this.el.classList.add(CSS_CLASS_LIST)
+        this.el.classList.add(CSS_CLASS_LIST + CSS_MOD_JS)
+        this.updateList(this.options)
+      };
+      search(searchStr){
+        this.el.innerHTML = ""
+        const result = this.options.filter((option) => {
+          return option.name.indexOf(searchStr) !== -1
+        })
+        this.updateList(result)
+      };
+      updateList(options){
         options.forEach((option) => {
           const optionEl = document.createElement('li')
+          optionEl.setAttribute('data-select-name', this.selectName)
           optionEl.textContent = option.name
-          optionEl.classList.add(Widget.generateDefaultClassForElement(this.listPositionClassName))
+          optionEl.classList.add(CSS_CLASS_LIST_POS)
+          optionEl.classList.add(CSS_CLASS_LIST_POS + CSS_MOD_JS)
+          optionEl.setAttribute('data-value', option.value)
           this.el.appendChild(optionEl)
         })
+      
       };
     }
 
     class Select {
 
-      selectWrapperClassName = 'wrapper';
-      selectInputJsClassName = 'input-JS';
-
-      selectInputClassName = 'input';
-      selectSearchableInputClassName = 'input_search';
-
-      selectInputWrapperClassName = 'input-wrapper';
-      selectSearchableInputWrapperClassName = 'input-wrapper_search';
-
       constructor(selectData){
         this.el = document.createElement('div');
-        this.el.classList.add(Widget.generateDefaultClassForElement(this.selectWrapperClassName));
-        const input = this.createInput(selectData.searchable, selectData.placeholder)
+        this.el.classList.add(CSS_CLASS_WRAPPER);
+        this.el.style.width = selectData.width
+
+        const input = this.createInput(selectData.searchable, selectData.placeholder, selectData.name)
+        this.input = input
         this.el.appendChild(input)
       };
 
-      createInput(searchIsEnable = false, placeholder){
+      createInput(searchIsEnable, placeholder, selectName){
 
         const inputWrapperEl = document.createElement('div');
         const inputEl = document.createElement('input');
 
-        inputWrapperEl.classList.add(Widget.generateDefaultClassForElement(this.selectInputWrapperClassName))
-        inputEl.classList.add(Widget.generateDefaultClassForElement(this.selectInputClassName));
+        inputWrapperEl.classList.add(CSS_CLASS_INPUT_WRAPPER);
+        inputEl.classList.add(CSS_CLASS_INPUT);
 
-        inputEl.placeholder = placeholder
-        inputEl.disabled = true
+        inputEl.disabled = true;
 
         if(searchIsEnable){
           inputEl.disabled = false
-          inputEl.classList.add(Widget.generateDefaultClassForElement(this.selectSearchableInputClassName))
-          inputEl.classList.add(Widget.generateDefaultClassForElement(this.selectInputJsClassName))
-          inputWrapperEl.classList.add(Widget.generateDefaultClassForElement(this.selectSearchableInputWrapperClassName))
+          inputEl.classList.add(CSS_CLASS_INPUT + CSS_MOD_JS)
+          inputEl.classList.add(CSS_CLASS_INPUT + CSS_MOD_SEARCHABLE)
+          inputEl.setAttribute('data-select-name', selectName)
+          inputEl.placeholder = placeholder || TEXT_DEFAULT_PLACEHOLDER_SEARCH;
+          inputWrapperEl.classList.add(CSS_CLASS_INPUT_WRAPPER + CSS_MOD_SEARCHABLE)
         }else{
-          inputWrapperEl.classList.add(Widget.generateDefaultClassForElement(this.selectInputJsClassName))
+          inputEl.placeholder = placeholder;
+          inputWrapperEl.classList.add(CSS_CLASS_INPUT + CSS_MOD_JS)
+          inputWrapperEl.setAttribute('data-select-name', selectName)
+          inputEl.placeholder = placeholder || TEXT_DEFAULT_PLACEHOLDER;
         }
 
         inputWrapperEl.appendChild(inputEl)

@@ -1,7 +1,7 @@
 .CUS-input-wrapper{
   z-index: 3;
 }
-.CUS-input-wrapper:not(.CUS-input-wrapper_search):after{
+.CUS-input-wrapper:not(.CUS-input-wrapper_searchable):after{
   top: 0;
   left: 0;
   right: 0;
@@ -13,6 +13,7 @@
   position: absolute;
 }
   .CUS-input{
+    color: #000;
     width: 100%;
     height: 30px;
     border: none;
@@ -26,7 +27,7 @@
     .CUS-input::placeholder{
       color: #aaa;
     }
-    .CUS-input:not(.CUS-input_search){
+    .CUS-input:not(.CUS-input_searchable){
       cursor: pointer;
       background-size: 8px 8px;
       background-repeat: no-repeat;
@@ -41,9 +42,12 @@
   width: 100%;
   display: none;
   list-style: none;
+  overflow: hidden;
+  overflow-y: scroll;
+  max-height: 200px;
   position: absolute;
   border-radius: 4px;
-  padding: 37px 0 7px;
+  padding: 37px 0 0px;
   background-color: #fff;
   border-top: 1px solid #aaa;
   box-shadow: 0px 1px 3px 1px rgba(100,100,100,0.2);
@@ -56,12 +60,30 @@
     display: inline-block;
     transition: all .2s ease;
   }
+  .CUS-list-position:last-child{
+    margin-bottom: 10px;
+  }
   .CUS-list-position:hover{
     background-color: #eee;
+  }
+  .CUS-list-position.CUS-list-position_selected{
+    color: #fff;
+    background-color: #333;
   }
 
 .CUS-wrapper.CUS-wrapper_opened{
   z-index: 5;
+}
+.CUS-wrapper.CUS-wrapper_opened:after{
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  content: '';
+  height: 30px;
+  display: block;
+  cursor: pointer;
+  position: absolute;
 }
 .CUS-wrapper.CUS-wrapper_opened .CUS-input{
   box-shadow: none;
