@@ -16,14 +16,14 @@
     const CSS_MOD_SELECTED = '_selected';
     const CSS_MOD_SEARCHABLE = '_searchable';
 
-    const TEXT_DEFAULT_PLACEHOLDER = 'Select...'
-    const TEXT_DEFAULT_PLACEHOLDER_SEARCH = 'Search:'
+    const TEXT_DEFAULT_PLACEHOLDER = 'Select...';
+    const TEXT_DEFAULT_PLACEHOLDER_SEARCH = 'Search:';
 
     class Widget {
-      selects = [];
 
       constructor(){
-        this.init()
+        this.selects = [];
+        this.init();
       };
       
       init(){
