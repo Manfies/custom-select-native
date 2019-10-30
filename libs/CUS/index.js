@@ -1,7 +1,7 @@
 (function(){
   "use strict";
   
-  const ModuleCUS = (function(){
+  const moduleCUS = (function(){
 
     const CSS_BASE_CLASS = 'CUS';
 
@@ -250,8 +250,14 @@
 
     }
 
-    const widget = new Widget()
+    return {
+      init: function(){
+        const widget = new Widget()
+      },
+    }
   
-  })('ModuleCUS')
+  })()
+
+  moduleCUS.init();
 
 })();
